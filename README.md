@@ -23,6 +23,15 @@ Enable dev executables
 
 npm run windows
 
+Open an Elevated PowerShell Window:
+Press Win + X and choose “Windows PowerShell (Admin)” or “Command Prompt (Admin).”
+Navigate to the directory where your project is located (e.g., C:\Users\Aries\Documents\GitHub\Simple\node_modules\react-native-windows\scripts).
+Run the Script: Execute the following command in the elevated PowerShell window:
+Set-ExecutionPolicy Unrestricted -Scope Process -Force; iex (New-Object System.Net.WebClient).DownloadString('https://aka.ms/rnw-vs2022-deps.ps1')
+This will download and run the rnw-dependencies.ps1 script, which installs the necessary software dependencies.
+
+update WindowsTargetPlatformVersion to 10.0.18362.0
+
 
 `
 
