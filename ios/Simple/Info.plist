@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Your message to the user explaining why the app needs access to the camera</string>
 	<key>CFBundleDisplayName</key>
 	<string>Simple</string>
 	<key>CFBundleExecutable</key>

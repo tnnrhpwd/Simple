@@ -1,5 +1,12 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 
 const styles = StyleSheet.create({
@@ -24,8 +31,58 @@ const styles = StyleSheet.create({
   },
 });
 
+const requestAndroidCameraPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: 'Camera Permission',
+        message: 'App needs access to your camera',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    return granted === PermissionsAndroid.RESULTS.GRANTED;
+  } catch (err) {
+    console.warn(err);
+    return false;
+  }
+};
+
 const InputPage: React.FC = () => {
   const [isCameraEnabled, setIsCameraEnabled] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState<
+    boolean | null
+  >(null);
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      if (Platform.OS === 'android') {
+        const granted = await requestAndroidCameraPermission();
+        console.log('Android camera permission:', granted);
+        setHasCameraPermission(granted);
+      } else if (Platform.OS === 'windows') {
+        console.log('Windows platform detected, assuming camera permission');
+        setHasCameraPermission(true);
+      } else {
+        // For iOS or other platforms, you may need to handle permissions separately
+        console.log(
+          'Non-Android/Windows platform detected, assuming camera permission',
+        );
+        setHasCameraPermission(true); // Assuming permission is granted for demonstration purposes
+      }
+    };
+
+    requestPermissions();
+  }, []);
+
+  if (hasCameraPermission === null) {
+    return <View />;
+  }
+  if (hasCameraPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
   return (
     <View style={styles.container}>
