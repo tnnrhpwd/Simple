@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import {RNCamera} from 'react-native-camera';
+import { RNCamera } from 'react-native-camera';
 
 const styles = StyleSheet.create({
   container: {
@@ -89,13 +89,14 @@ const InputPage: React.FC = () => {
       <Text style={styles.header}>Input Page</Text>
       {isCameraEnabled ? (
         <View style={styles.cameraContainer}>
-          <RNCamera style={{flex: 1}} type={RNCamera.Constants.Type.back}>
+          <RNCamera style={{ flex: 1 }} type={RNCamera.Constants.Type.back}>
             <View
               style={{
                 flex: 1,
                 backgroundColor: 'transparent',
                 flexDirection: 'row',
-              }}>
+              }}
+            >
               <TouchableOpacity
                 style={{
                   flex: 0.1,
@@ -104,8 +105,11 @@ const InputPage: React.FC = () => {
                 }}
                 onPress={() => {
                   setIsCameraEnabled(false);
-                }}>
-                <Text style={{fontSize: 18, marginBottom: 10, color: 'white'}}>
+                }}
+              >
+                <Text
+                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}
+                >
                   Close
                 </Text>
               </TouchableOpacity>
@@ -124,8 +128,9 @@ const InputPage: React.FC = () => {
           }}
           onPress={() => {
             setIsCameraEnabled(true);
-          }}>
-          <Text style={{color: '#ffffff'}}>Turn on Camera</Text>
+          }}
+        >
+          <Text style={{ color: '#ffffff' }}>Turn on Camera</Text>
         </TouchableOpacity>
       )}
     </View>
