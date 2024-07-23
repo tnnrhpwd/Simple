@@ -78,7 +78,7 @@ type SectionProps = {
   children: React.ReactNode;
 };
 
-function Section({children, title}: SectionProps): React.JSX.Element {
+function Section({ children, title }: SectionProps): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -88,7 +88,8 @@ function Section({children, title}: SectionProps): React.JSX.Element {
           {
             color: isDarkMode ? Colors.white : Colors.black,
           },
-        ]}>
+        ]}
+      >
         {title}
       </Text>
       <Text
@@ -97,7 +98,8 @@ function Section({children, title}: SectionProps): React.JSX.Element {
           {
             color: isDarkMode ? Colors.light : Colors.dark,
           },
-        ]}>
+        ]}
+      >
         {children}
       </Text>
     </View>
@@ -163,19 +165,23 @@ function App(): React.JSX.Element {
       />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
+        style={backgroundStyle}
+      >
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+          }}
+        >
           <Text
             style={styles.navbarButton}
-            onPress={() => navigateTo('HomePage')}>
+            onPress={() => navigateTo('HomePage')}
+          >
             Home
           </Text>
           <Text
             style={styles.navbarButton}
-            onPress={() => navigateTo('InputPage')}>
+            onPress={() => navigateTo('InputPage')}
+          >
             InputPage
           </Text>
           <Text style={styles.navbarButton} onPress={() => navigateTo('About')}>
@@ -183,7 +189,8 @@ function App(): React.JSX.Element {
           </Text>
           <Text
             style={styles.navbarButton}
-            onPress={() => navigateTo('Contact')}>
+            onPress={() => navigateTo('Contact')}
+          >
             Contact
           </Text>
         </View>

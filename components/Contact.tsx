@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -19,12 +19,12 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 32,
     color: '#ffffff',
-    marginBottom: 16
+    marginBottom: 16,
   },
   form: {
     width: '80%',
     alignItems: 'center',
-    marginVertical: 32
+    marginVertical: 32,
   },
   input: {
     width: '100%',
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     marginVertical: 8,
     backgroundColor: '#dddddd',
-    color: '#333333'
+    color: '#333333',
   },
   button: {
     width: '100%',
@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#007700',
   },
   buttonText: {
-    color: '#ffffff'
-  }
+    color: '#ffffff',
+  },
 });
 
 const Contact: React.FC = () => {
@@ -89,13 +89,14 @@ const Contact: React.FC = () => {
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <TouchableOpacity
-          onPress={() => Linking.openURL('https://linkedin.com')}>
-          <Text style={{color: '#007700', fontSize: 18}}>LinkedIn</Text>
+          onPress={() => Linking.openURL('https://linkedin.com')}
+        >
+          <Text style={{ color: '#007700', fontSize: 18 }}>LinkedIn</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => Linking.openURL('https://github.com')}>
-          <Text style={{color: '#007700', fontSize: 18}}>GitHub</Text>
+          <Text style={{ color: '#007700', fontSize: 18 }}>GitHub</Text>
         </TouchableOpacity>
       </View>
     </View>
