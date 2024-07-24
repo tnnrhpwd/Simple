@@ -6,6 +6,9 @@
 // Includes from react-native-camera
 #include <winrt/ReactNativeCameraCPP.h>
 
+// Includes from react-native-webview
+#include <winrt/ReactNativeWebView.h>
+
 namespace winrt::Microsoft::ReactNative
 {
 
@@ -13,6 +16,8 @@ void RegisterAutolinkedNativeModulePackages(winrt::Windows::Foundation::Collecti
 { 
     // IReactPackageProviders from react-native-camera
     packageProviders.Append(winrt::ReactNativeCameraCPP::ReactPackageProvider());
+    // IReactPackageProviders from react-native-webview
+    packageProviders.Append(winrt::ReactNativeWebView::ReactPackageProvider());
 }
 
 }

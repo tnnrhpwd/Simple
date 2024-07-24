@@ -14,7 +14,8 @@
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-camera": "^4.2.1",
-    "react-native-windows": "0.74.11"
+    "react-native-webview": "^13.10.5",
+    "react-native-windows": "^0.74.11"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

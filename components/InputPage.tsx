@@ -8,6 +8,7 @@ import {
   Platform,
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
+import { WebView } from 'react-native-webview';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,6 +29,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     backgroundColor: '#333333',
+  },
+  webviewContainer: {
+    flex: 1,
+    width: '100%',
+  },
+  button: {
+    width: '80%',
+    height: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 8,
+    backgroundColor: '#007700',
+  },
+  buttonText: {
+    color: '#ffffff',
+  },
+  closeButtonText: {
+    fontSize: 18,
+    marginBottom: 10,
+    color: 'white',
   },
 });
 
@@ -66,7 +87,6 @@ const InputPage: React.FC = () => {
         console.log('Windows platform detected, assuming camera permission');
         setHasCameraPermission(true);
       } else {
-        // For iOS or other platforms, you may need to handle permissions separately
         console.log(
           'Non-Android/Windows platform detected, assuming camera permission',
         );
@@ -87,50 +107,92 @@ const InputPage: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Input Page</Text>
-      {isCameraEnabled ? (
-        <View style={styles.cameraContainer}>
-          <RNCamera style={{ flex: 1 }} type={RNCamera.Constants.Type.back}>
-            <View
+      <View style={styles.cameraContainer}>
+        <RNCamera style={{ flex: 1 }} type={RNCamera.Constants.Type.back}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'transparent',
+              flexDirection: 'row',
+            }}
+          >
+            <TouchableOpacity
               style={{
-                flex: 1,
-                backgroundColor: 'transparent',
-                flexDirection: 'row',
+                flex: 0.1,
+                alignSelf: 'flex-end',
+                alignItems: 'center',
               }}
+              onPress={() => setIsCameraEnabled(false)}
             >
-              <TouchableOpacity
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </RNCamera>
+      </View>
+      {isCameraEnabled ? (
+        Platform.OS === 'windows' ? (
+          <View style={styles.webviewContainer}>
+            <WebView
+              style={{ flex: 1 }}
+              javaScriptEnabled
+              source={{
+                html: `
+                  <!DOCTYPE html>
+                  <html>
+                    <body>
+                      <video id="video" autoplay style="width: 100%; height: 100%;"></video>
+                      <script>
+                        const video = document.getElementById('video');
+                        navigator.mediaDevices.getUserMedia({ video: true })
+                          .then(stream => {
+                            video.srcObject = stream;
+                          })
+                          .catch(error => {
+                            console.error('Error accessing webcam:', error);
+                          });
+                      </script>
+                    </body>
+                  </html>
+                `,
+              }}
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setIsCameraEnabled(false)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.cameraContainer}>
+            <RNCamera style={{ flex: 1 }} type={RNCamera.Constants.Type.back}>
+              <View
                 style={{
-                  flex: 0.1,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  setIsCameraEnabled(false);
+                  flex: 1,
+                  backgroundColor: 'transparent',
+                  flexDirection: 'row',
                 }}
               >
-                <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}
+                <TouchableOpacity
+                  style={{
+                    flex: 0.1,
+                    alignSelf: 'flex-end',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => setIsCameraEnabled(false)}
                 >
-                  Close
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </RNCamera>
-        </View>
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </RNCamera>
+          </View>
+        )
       ) : (
         <TouchableOpacity
-          style={{
-            width: '80%',
-            height: 48,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginVertical: 8,
-            backgroundColor: '#007700',
-          }}
-          onPress={() => {
-            setIsCameraEnabled(true);
-          }}
+          style={styles.button}
+          onPress={() => setIsCameraEnabled(true)}
         >
-          <Text style={{ color: '#ffffff' }}>Turn on Camera</Text>
+          <Text style={styles.buttonText}>Turn on Camera</Text>
         </TouchableOpacity>
       )}
     </View>
