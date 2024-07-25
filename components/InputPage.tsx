@@ -6,9 +6,12 @@ import {
   StyleSheet,
   PermissionsAndroid,
   Platform,
+  Alert,
 } from 'react-native';
-import { RNCamera } from 'react-native-camera';
+import { RNCamera } from 'react-native-vision-camera';
 import { WebView } from 'react-native-webview';
+import RNFS from 'react-native-fs';
+import RNFFmpeg from 'react-native-ffmpeg';
 
 const styles = StyleSheet.create({
   container: {
@@ -71,24 +74,48 @@ const requestAndroidCameraPermission = async () => {
   }
 };
 
+const requestAndroidStoragePermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        title: 'Storage Permission',
+        message: 'App needs access to your storage to save videos',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    return granted === PermissionsAndroid.RESULTS.GRANTED;
+  } catch (err) {
+    console.warn(err);
+    return false;
+  }
+};
+
 const InputPage: React.FC = () => {
   const [isCameraEnabled, setIsCameraEnabled] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<
     boolean | null
   >(null);
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     const requestPermissions = async () => {
       if (Platform.OS === 'android') {
-        const granted = await requestAndroidCameraPermission();
-        console.log('Android camera permission:', granted);
-        setHasCameraPermission(granted);
+        const cameraGranted = await requestAndroidCameraPermission();
+        const storageGranted = await requestAndroidStoragePermission();
+        console.log('Android camera permission:', cameraGranted);
+        console.log('Android storage permission:', storageGranted);
+        setHasCameraPermission(cameraGranted && storageGranted);
       } else if (Platform.OS === 'windows') {
-        console.log('Windows platform detected, assuming camera permission');
+        console.log(
+          'Windows platform detected, assuming camera and storage permission',
+        );
         setHasCameraPermission(true);
       } else {
         console.log(
-          'Non-Android/Windows platform detected, assuming camera permission',
+          'Non-Android/Windows platform detected, assuming camera and storage permission',
         );
         setHasCameraPermission(true); // Assuming permission is granted for demonstration purposes
       }
@@ -96,6 +123,28 @@ const InputPage: React.FC = () => {
 
     requestPermissions();
   }, []);
+
+  const startRecording = async () => {
+    setIsRecording(true);
+    const outputPath = `${RNFS.ExternalDirectoryPath}/screen_recording.mp4`;
+    const command = `-y -f gdigrab -framerate 30 -i desktop ${outputPath}`;
+    RNFFmpeg.execute(command)
+      .then((result: { rc: unknown }) => {
+        console.log(`FFmpeg process exited with rc=${result.rc}`);
+        setIsRecording(false);
+        Alert.alert('Screen Recording', `Recording saved to ${outputPath}`);
+      })
+      .catch((err: unknown) => {
+        console.error('FFmpeg process failed:', err);
+        setIsRecording(false);
+        Alert.alert('Screen Recording', 'Failed to start recording');
+      });
+  };
+
+  const stopRecording = () => {
+    RNFFmpeg.cancel();
+    setIsRecording(false);
+  };
 
   if (hasCameraPermission === null) {
     return <View />;
@@ -195,6 +244,14 @@ const InputPage: React.FC = () => {
           <Text style={styles.buttonText}>Turn on Camera</Text>
         </TouchableOpacity>
       )}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={isRecording ? stopRecording : startRecording}
+      >
+        <Text style={styles.buttonText}>
+          {isRecording ? 'Stop Recording' : 'Start Recording'}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
