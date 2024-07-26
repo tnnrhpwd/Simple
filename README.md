@@ -24,6 +24,11 @@ Enable dev executables
 
 npm run windows
 
+when removing a package, delete it from Simple.sln
+
+npx react-native clean
+
+
 Open an Elevated PowerShell Window:
 Press Win + X and choose “Windows PowerShell (Admin)” or “Command Prompt (Admin).”
 Navigate to the directory where your project is located (e.g., C:\Users\Aries\Documents\GitHub\Simple\node_modules\react-native-windows\scripts).

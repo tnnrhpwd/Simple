@@ -3,9 +3,6 @@
 #include "pch.h"
 #include "AutolinkedNativeModules.g.h"
 
-// Includes from react-native-camera
-#include <winrt/ReactNativeCameraCPP.h>
-
 // Includes from react-native-webview
 #include <winrt/ReactNativeWebView.h>
 
@@ -14,8 +11,6 @@ namespace winrt::Microsoft::ReactNative
 
 void RegisterAutolinkedNativeModulePackages(winrt::Windows::Foundation::Collections::IVector<winrt::Microsoft::ReactNative::IReactPackageProvider> const& packageProviders)
 { 
-    // IReactPackageProviders from react-native-camera
-    packageProviders.Append(winrt::ReactNativeCameraCPP::ReactPackageProvider());
     // IReactPackageProviders from react-native-webview
     packageProviders.Append(winrt::ReactNativeWebView::ReactPackageProvider());
 }

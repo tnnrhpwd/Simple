@@ -7,11 +7,13 @@ import {
   PermissionsAndroid,
   Platform,
   Alert,
+  NativeModules,
 } from 'react-native';
-import { RNCamera } from 'react-native-vision-camera';
+import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { WebView } from 'react-native-webview';
-import RNFS from 'react-native-fs';
-import RNFFmpeg from 'react-native-ffmpeg';
+
+const { MouseClick, KeyboardSimulation } = NativeModules;
+console.log(NativeModules);
 
 const styles = StyleSheet.create({
   container: {
@@ -55,38 +57,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const requestAndroidCameraPermission = async () => {
+const requestAndroidPermissions = async () => {
   try {
-    const granted = await PermissionsAndroid.request(
+    const granted = await PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: 'Camera Permission',
-        message: 'App needs access to your camera',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
-    );
-    return granted === PermissionsAndroid.RESULTS.GRANTED;
-  } catch (err) {
-    console.warn(err);
-    return false;
-  }
-};
-
-const requestAndroidStoragePermission = async () => {
-  try {
-    const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      {
-        title: 'Storage Permission',
-        message: 'App needs access to your storage to save videos',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
+    ]);
+    return (
+      granted[PermissionsAndroid.PERMISSIONS.CAMERA] ===
+        PermissionsAndroid.RESULTS.GRANTED &&
+      granted[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] ===
+        PermissionsAndroid.RESULTS.GRANTED
     );
-    return granted === PermissionsAndroid.RESULTS.GRANTED;
   } catch (err) {
     console.warn(err);
     return false;
@@ -98,52 +80,55 @@ const InputPage: React.FC = () => {
   const [hasCameraPermission, setHasCameraPermission] = useState<
     boolean | null
   >(null);
-  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     const requestPermissions = async () => {
       if (Platform.OS === 'android') {
-        const cameraGranted = await requestAndroidCameraPermission();
-        const storageGranted = await requestAndroidStoragePermission();
-        console.log('Android camera permission:', cameraGranted);
-        console.log('Android storage permission:', storageGranted);
-        setHasCameraPermission(cameraGranted && storageGranted);
-      } else if (Platform.OS === 'windows') {
-        console.log(
-          'Windows platform detected, assuming camera and storage permission',
-        );
-        setHasCameraPermission(true);
+        const permissionsGranted = await requestAndroidPermissions();
+        setHasCameraPermission(permissionsGranted);
       } else {
-        console.log(
-          'Non-Android/Windows platform detected, assuming camera and storage permission',
-        );
-        setHasCameraPermission(true); // Assuming permission is granted for demonstration purposes
+        setHasCameraPermission(true);
       }
     };
-
     requestPermissions();
   }, []);
 
-  const startRecording = async () => {
-    setIsRecording(true);
-    const outputPath = `${RNFS.ExternalDirectoryPath}/screen_recording.mp4`;
-    const command = `-y -f gdigrab -framerate 30 -i desktop ${outputPath}`;
-    RNFFmpeg.execute(command)
-      .then((result: { rc: unknown }) => {
-        console.log(`FFmpeg process exited with rc=${result.rc}`);
-        setIsRecording(false);
-        Alert.alert('Screen Recording', `Recording saved to ${outputPath}`);
-      })
-      .catch((err: unknown) => {
-        console.error('FFmpeg process failed:', err);
-        setIsRecording(false);
-        Alert.alert('Screen Recording', 'Failed to start recording');
-      });
+  const handleMouseClick = () => {
+    if (Platform.OS === 'windows' && MouseClick) {
+      MouseClick.clickLeftMouseButton();
+    } else {
+      if (!(Platform.OS === 'windows')) {
+        Alert.alert(
+          'Mouse Click',
+          'Mouse click simulation is only supported on Windows.',
+        );
+      }
+      if (!MouseClick) {
+        Alert.alert(
+          'Mouse Click',
+          'Mouse click simulation is not correctly implemented.',
+        );
+      }
+    }
   };
 
-  const stopRecording = () => {
-    RNFFmpeg.cancel();
-    setIsRecording(false);
+  const handleKeyboardSimulation = () => {
+    if (Platform.OS === 'windows' && KeyboardSimulation) {
+      KeyboardSimulation.simulateEnterKeyPress();
+    } else {
+      if (!(Platform.OS === 'windows')) {
+        Alert.alert(
+          'Keyboard Simulation',
+          'Keyboard simulation is only supported on Windows.',
+        );
+      }
+      if (!KeyboardSimulation) {
+        Alert.alert(
+          'Keyboard Simulation',
+          'Keyboard simulation is not correctly implemented.',
+        );
+      }
+    }
   };
 
   if (hasCameraPermission === null) {
@@ -157,101 +142,31 @@ const InputPage: React.FC = () => {
     <View style={styles.container}>
       <Text style={styles.header}>Input Page</Text>
       <View style={styles.cameraContainer}>
-        <RNCamera style={{ flex: 1 }} type={RNCamera.Constants.Type.back}>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'transparent',
-              flexDirection: 'row',
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                flex: 0.1,
-                alignSelf: 'flex-end',
-                alignItems: 'center',
-              }}
-              onPress={() => setIsCameraEnabled(false)}
-            >
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </RNCamera>
-      </View>
-      {isCameraEnabled ? (
-        Platform.OS === 'windows' ? (
-          <View style={styles.webviewContainer}>
-            <WebView
-              style={{ flex: 1 }}
-              javaScriptEnabled
-              source={{
-                html: `
-                  <!DOCTYPE html>
-                  <html>
-                    <body>
-                      <video id="video" autoplay style="width: 100%; height: 100%;"></video>
-                      <script>
-                        const video = document.getElementById('video');
-                        navigator.mediaDevices.getUserMedia({ video: true })
-                          .then(stream => {
-                            video.srcObject = stream;
-                          })
-                          .catch(error => {
-                            console.error('Error accessing webcam:', error);
-                          });
-                      </script>
-                    </body>
-                  </html>
-                `,
-              }}
-            />
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => setIsCameraEnabled(false)}
-            >
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.cameraContainer}>
-            <RNCamera style={{ flex: 1 }} type={RNCamera.Constants.Type.back}>
-              <View
-                style={{
-                  flex: 1,
-                  backgroundColor: 'transparent',
-                  flexDirection: 'row',
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    flex: 0.1,
-                    alignSelf: 'flex-end',
-                    alignItems: 'center',
-                  }}
-                  onPress={() => setIsCameraEnabled(false)}
-                >
-                  <Text style={styles.closeButtonText}>Close</Text>
-                </TouchableOpacity>
-              </View>
-            </RNCamera>
-          </View>
-        )
-      ) : (
+        {/* {isCameraEnabled && device ? (
+          <Camera
+            style={StyleSheet.absoluteFill}
+            device={device}
+            isActive={isCameraEnabled}
+          />
+        ) : null} */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setIsCameraEnabled(true)}
+          onPress={() => setIsCameraEnabled((prev) => !prev)}
         >
-          <Text style={styles.buttonText}>Turn on Camera</Text>
+          <Text style={styles.buttonText}>
+            {isCameraEnabled ? 'Turn off Camera' : 'Turn on Camera'}
+          </Text>
         </TouchableOpacity>
-      )}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={isRecording ? stopRecording : startRecording}
-      >
-        <Text style={styles.buttonText}>
-          {isRecording ? 'Stop Recording' : 'Start Recording'}
-        </Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleMouseClick}>
+          <Text style={styles.buttonText}>Simulate Mouse Click</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleKeyboardSimulation}
+        >
+          <Text style={styles.buttonText}>Simulate Keyboard Input</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
