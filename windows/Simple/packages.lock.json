@@ -67,7 +67,7 @@
           "boost": "[1.76.0, )"
         }
       },
-      "reactnativecameracpp": {
+      "reactnativeasyncstorage": {
         "type": "Project",
         "dependencies": {
           "Microsoft.ReactNative": "[1.0.0, )",

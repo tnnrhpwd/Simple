@@ -1,8 +1,5 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
+ * React Native App @format
  */
 
 import React from 'react';

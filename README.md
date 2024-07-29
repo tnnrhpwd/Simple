@@ -28,6 +28,9 @@ when removing a package, delete it from Simple.sln
 
 npx react-native clean
 
+.\generate_structure.ps1
+
+npx react-native run-windows --logging
 
 Open an Elevated PowerShell Window:
 Press Win + X and choose “Windows PowerShell (Admin)” or “Command Prompt (Admin).”
