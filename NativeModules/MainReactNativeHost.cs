@@ -13,6 +13,7 @@ namespace Simple
             new MainReactPackage(),
             new MouseClickPackage(),
             new KeyboardSimulationPackage(),
+            new NativeAsyncStorageModulePackage(),
         };
     }
 }
