@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,37 +9,12 @@ import {
   Alert,
   NativeModules,
 } from 'react-native';
-import { Camera, useCameraDevices } from 'expo-camera';
-import * as tf from '@tensorflow/tfjs';
-import * as tfReactNative from '@tensorflow/tfjs-react-native';
-import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
-import { decodeJpeg, fetch } from '@tensorflow/tfjs-react-native';
-// import modelJson from './path_to_your_model/model.json';
-// import modelWeights from './path_to_your_model/group1-shard1of1.bin';
-const { NativeAsyncStorageModule } = NativeModules;
+import { Camera, useCameraDevices } from 'react-native-vision-camera';
+import { WebView } from 'react-native-webview';
 
-import MouseClickModule from '../NativeModules/MouseClickModule';
-import KeyboardSimulationModule from '../NativeModules/KeyboardSimulationModule';
+const { MouseClick, KeyboardSimulation } = NativeModules;
+console.log(NativeModules);
 
-if (!MouseClickModule) {
-  Alert.alert(
-    'Keyboard Simulation',
-    Platform.OS !== 'windows'
-      ? 'MouseClickModule is only supported on Windows.'
-      : 'MouseClickModule is returning false.',
-  );
-  MouseClickModule.clickLeftMouseButton();
-}
-
-if (KeyboardSimulationModule) {
-  Alert.alert(
-    'Keyboard Simulation',
-    Platform.OS !== 'windows'
-      ? 'MouseClickModule is only supported on Windows.'
-      : 'MouseClickModule is returning false.',
-  );
-  KeyboardSimulationModule.simulateEnterKeyPress();
-}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -60,6 +35,10 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#333333',
   },
+  webviewContainer: {
+    flex: 1,
+    width: '100%',
+  },
   button: {
     width: '80%',
     height: 48,
@@ -70,6 +49,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#ffffff',
+  },
+  closeButtonText: {
+    fontSize: 18,
+    marginBottom: 10,
+    color: 'white',
   },
 });
 
@@ -93,10 +77,9 @@ const requestAndroidPermissions = async () => {
 
 const InputPage: React.FC = () => {
   const [isCameraEnabled, setIsCameraEnabled] = useState(false);
-  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
-  const [device, setDevice] = useState<unknown>(null);
-  const cameraRef = useRef(null);
-  const [model, setModel] = useState(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState<
+    boolean | null
+  >(null);
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -108,75 +91,52 @@ const InputPage: React.FC = () => {
       }
     };
     requestPermissions();
-
-    // const getDevices = async () => {
-    //   const devices = await useCameraDevices();
-    //   setDevice(devices.back);
-    // };
-    // getDevices();
-
-    // const loadTfModel = async () => {
-    //   await tf.ready();
-    //   const loadedModel = await tf.loadGraphModel(bundleResourceIO(modelJson, modelWeights));
-    //   setModel(loadedModel);
-    // };
-    // loadTfModel();
   }, []);
 
   const handleMouseClick = () => {
-    if (Platform.OS === 'windows' && MouseClickModule) {
-      MouseClickModule.clickLeftMouseButton();
+    if (Platform.OS === 'windows' && MouseClick) {
+      MouseClick.clickLeftMouseButton();
     } else {
-      Alert.alert(
-        'Keyboard Simulation',
-        Platform.OS !== 'windows'
-          ? 'MouseClickModule is only supported on Windows.'
-          : 'MouseClickModule is returning false.',
-      );
+      if (!(Platform.OS === 'windows')) {
+        Alert.alert(
+          'Mouse Click',
+          'Mouse click simulation is only supported on Windows.',
+        );
+      }
+      if (!MouseClick) {
+        Alert.alert(
+          'Mouse Click',
+          'Mouse click simulation is not correctly implemented.',
+        );
+      }
     }
   };
 
   const handleKeyboardSimulation = () => {
-    if (Platform.OS === 'windows' && KeyboardSimulationModule) {
-      KeyboardSimulationModule.simulateEnterKeyPress();
+    if (Platform.OS === 'windows' && KeyboardSimulation) {
+      KeyboardSimulation.simulateEnterKeyPress();
     } else {
-      Alert.alert(
-        'Keyboard Simulation',
-        Platform.OS !== 'windows'
-          ? 'KeyboardSimulationModule is only supported on Windows.'
-          : 'KeyboardSimulationModule is returning false.',
-      );
+      if (!(Platform.OS === 'windows')) {
+        Alert.alert(
+          'Keyboard Simulation',
+          'Keyboard simulation is only supported on Windows.',
+        );
+      }
+      if (!KeyboardSimulation) {
+        Alert.alert(
+          'Keyboard Simulation',
+          'Keyboard simulation is not correctly implemented.',
+        );
+      }
     }
   };
 
-  // const analyzeImage = async (uri) => {
-  //   if (model) {
-  //     const response = await fetch(uri, {}, { isBinary: true });
-  //     const imageDataArrayBuffer = await response.arrayBuffer();
-  //     const imageTensor = decodeJpeg(new Uint8Array(imageDataArrayBuffer));
-
-  //     const prediction = await model.predict(imageTensor);
-  //     const result = await prediction.data();
-
-  //     if (result[0] === 'desiredLabel') {
-  //       handleKeyboardSimulation();
-  //     }
-  //   }
-  // };
-
-  // const takePicture = async () => {
-  //   if (cameraRef.current) {
-  //     const picture = await cameraRef.current.takePictureAsync();
-  //     analyzeImage(picture.uri);
-  //   }
-  // };
-
-  // if (hasCameraPermission === null) {
-  //   return <View />;
-  // }
-  // if (hasCameraPermission === false) {
-  //   return <Text>No access to camera</Text>;
-  // }
+  if (hasCameraPermission === null) {
+    return <View />;
+  }
+  if (hasCameraPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
   return (
     <View style={styles.container}>
@@ -184,7 +144,6 @@ const InputPage: React.FC = () => {
       <View style={styles.cameraContainer}>
         {/* {isCameraEnabled && device ? (
           <Camera
-            ref={cameraRef}
             style={StyleSheet.absoluteFill}
             device={device}
             isActive={isCameraEnabled}
@@ -192,15 +151,12 @@ const InputPage: React.FC = () => {
         ) : null} */}
         <TouchableOpacity
           style={styles.button}
-          // onPress={() => setIsCameraEnabled((prev) => !prev)}
+          onPress={() => setIsCameraEnabled((prev) => !prev)}
         >
           <Text style={styles.buttonText}>
             {isCameraEnabled ? 'Turn off Camera' : 'Turn on Camera'}
           </Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.button} onPress={takePicture}>
-          <Text style={styles.buttonText}>Capture and Analyze Image</Text>
-        </TouchableOpacity> */}
         <TouchableOpacity style={styles.button} onPress={handleMouseClick}>
           <Text style={styles.buttonText}>Simulate Mouse Click</Text>
         </TouchableOpacity>
