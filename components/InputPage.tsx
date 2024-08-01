@@ -16,6 +16,7 @@ import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import { decodeJpeg, fetch } from '@tensorflow/tfjs-react-native';
 // import modelJson from './path_to_your_model/model.json';
 // import modelWeights from './path_to_your_model/group1-shard1of1.bin';
+const { NativeAsyncStorageModule } = NativeModules;
 
 import MouseClickModule from '../NativeModules/MouseClickModule';
 import KeyboardSimulationModule from '../NativeModules/KeyboardSimulationModule';

@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "windows": "react-native run-windows"
+    "windows": "react-native run-windows",
+    "codegen": "react-native codegen-windows --logging"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.24.0",

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Simple
 {
-    class MainReactNativeHost : ReactNativeHost
+    public class MainReactNativeHost : ReactNativeHost
     {
         protected override IReadOnlyList<IReactPackage> Packages => new List<IReactPackage>
         {
