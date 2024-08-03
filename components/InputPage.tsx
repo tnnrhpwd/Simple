@@ -21,7 +21,7 @@ const { NativeAsyncStorageModule } = NativeModules;
 import MouseClickModule from '../NativeModules/MouseClickModule';
 import KeyboardSimulationModule from '../NativeModules/KeyboardSimulationModule';
 
-if (!MouseClickModule) {
+if (MouseClickModule) {
   Alert.alert(
     'Keyboard Simulation',
     Platform.OS !== 'windows'

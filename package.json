@@ -50,7 +50,7 @@
   "codegenConfig": {
     "name": "Simple",
     "type": "modules",
-    "jsSrcsDir": "../Simple",
+    "jsSrcsDir": "../Simple/windows/Simple",
     "windows": {
       "namespace": "NativeModules",
       "cppStringType": "std::string",
