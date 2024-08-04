@@ -124,27 +124,70 @@ const InputPage: React.FC = () => {
   }, []);
 
   const handleMouseClick = () => {
-    if (Platform.OS === 'windows' && MouseClickModule) {
-      MouseClickModule.clickLeftMouseButton();
+    if (Platform.OS === 'windows') {
+      if (
+        MouseClickModule &&
+        typeof MouseClickModule.clickLeftMouseButton === 'function'
+      ) {
+        try {
+          MouseClickModule.clickLeftMouseButton();
+          Alert.alert('Mouse Click', 'Mouse click simulated successfully.');
+        } catch (error) {
+          console.error('Error invoking MouseClickModule:', error);
+          Alert.alert(
+            'Error',
+            'Failed to invoke MouseClickModule. See console for details.',
+          );
+        }
+      } else {
+        console.warn(
+          'MouseClickModule is not properly defined or is missing required methods.',
+        );
+        Alert.alert(
+          'Error',
+          'MouseClickModule is not properly defined or missing methods.',
+        );
+      }
     } else {
       Alert.alert(
-        'Keyboard Simulation',
-        Platform.OS !== 'windows'
-          ? 'MouseClickModule is only supported on Windows.'
-          : 'MouseClickModule is returning false.',
+        'Mouse Click Simulation',
+        'MouseClickModule is only supported on Windows.',
       );
     }
   };
 
   const handleKeyboardSimulation = () => {
-    if (Platform.OS === 'windows' && KeyboardSimulationModule) {
-      KeyboardSimulationModule.simulateEnterKeyPress();
+    if (Platform.OS === 'windows') {
+      if (
+        KeyboardSimulationModule &&
+        typeof KeyboardSimulationModule.simulateEnterKeyPress === 'function'
+      ) {
+        try {
+          KeyboardSimulationModule.simulateEnterKeyPress();
+          Alert.alert(
+            'Keyboard Simulation',
+            'Enter key simulated successfully.',
+          );
+        } catch (error) {
+          console.error('Error invoking KeyboardSimulationModule:', error);
+          Alert.alert(
+            'Error',
+            'Failed to invoke KeyboardSimulationModule. See console for details.',
+          );
+        }
+      } else {
+        console.warn(
+          'KeyboardSimulationModule is not properly defined or is missing required methods.',
+        );
+        Alert.alert(
+          'Error',
+          'KeyboardSimulationModule is not properly defined or missing methods.',
+        );
+      }
     } else {
       Alert.alert(
         'Keyboard Simulation',
-        Platform.OS !== 'windows'
-          ? 'KeyboardSimulationModule is only supported on Windows.'
-          : 'KeyboardSimulationModule is returning false.',
+        'KeyboardSimulationModule is only supported on Windows.',
       );
     }
   };

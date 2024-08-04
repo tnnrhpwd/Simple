@@ -2,12 +2,11 @@
 
 #include "winrt/Microsoft.ReactNative.h"
 
-namespace winrt::Simple::implementation
-{
+namespace winrt::Simple::implementation{
     struct ReactPackageProvider : winrt::implements<ReactPackageProvider, winrt::Microsoft::ReactNative::IReactPackageProvider>
     {
-    public: // IReactPackageProvider
+    public:
         void CreatePackage(winrt::Microsoft::ReactNative::IReactPackageBuilder const &packageBuilder) noexcept;
     };
-} // namespace winrt::Simple::implementation
+}
 

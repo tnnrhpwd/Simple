@@ -8,8 +8,10 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "windows": "react-native run-windows",
-    "codegen": "react-native codegen-windows --logging"
+    "windows": "react-native run-windows --logging",
+    "codegen": "react-native codegen-windows --logging",
+    "publish": "npx react-native bundle --platform windows --dev false --entry-file index.js --bundle-output ./.bundle/index.windows.bundle --assets-dest ./.bundle",
+    "hierarchy": "powershell -ExecutionPolicy Bypass -File ./generate_structure.ps1"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.24.0",
@@ -48,16 +50,16 @@
     "node": ">=18"
   },
   "codegenConfig": {
-    "name": "Simple",
-    "type": "modules",
-    "jsSrcsDir": "../Simple/windows/Simple",
-    "windows": {
-      "namespace": "NativeModules",
-      "cppStringType": "std::string",
-      "separateDataTypes": false,
-      "outputDirectory": "codegen"
-    }
-  },
+  "name": "Simple",
+  "type": "modules",
+  "jsSrcsDir": "./windows/Simple",
+  "windows": {
+    "namespace": "NativeModules",
+    "cppStringType": "std::string",
+    "separateDataTypes": false,
+    "outputDirectory": "./NativeModules/codegen"
+  }
+},
   "modules": {
     "MouseClickModule": {
       "sourceDir": "./NativeModules",

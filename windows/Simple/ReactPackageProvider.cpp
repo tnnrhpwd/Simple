@@ -11,5 +11,10 @@ void ReactPackageProvider::CreatePackage(IReactPackageBuilder const &packageBuil
 {
     AddAttributedModules(packageBuilder, true);
 }
+    // This code below makes the app crash, but I think it may be required for Native Module Implementation. 
+    // void ReactPackageProvider::CreatePackage(IReactPackageBuilder const &packageBuilder) noexcept
+    // {
+    //     packageBuilder.AddModule(L"MouseClickModule", winrt::make<MouseClickModule>());
+    // }
 
-} // namespace winrt::Simple::implementation
+}
