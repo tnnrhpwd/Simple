@@ -4,10 +4,10 @@
 
 namespace NativeModules {
 
-class MouseClickModule {
+class KeyboardSimulationModule {
 public:
     void Initialize(winrt::Microsoft.ReactNative::ReactContext const& reactContext);
-    void Click();
+    void TypeText(winrt::hstring const& text);
 
 private:
     winrt::Microsoft.ReactNative::ReactContext m_reactContext{ nullptr };

@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "windows": "react-native run-windows --logging",
+    "windows": "react-native run-windows",
     "clean": "react-native clean",
     "codegen": "react-native codegen-windows --logging",
     "publish": "npx react-native bundle --platform windows --dev false --entry-file index.js --bundle-output ./.bundle/index.windows.bundle --assets-dest ./.bundle",
@@ -23,10 +23,10 @@
     "expo-camera": "^13.4.4",
     "expo-gl": "^13.6.0",
     "react": "18.2.0",
-    "react-native": "0.74.3",
+    "react-native": "^0.74.5",
     "react-native-fs": "^2.20.0",
     "react-native-unimodules": "^0.12.0",
-    "react-native-windows": "^0.74.13"
+    "react-native-windows": "0.74.14"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -51,16 +51,16 @@
     "node": ">=18"
   },
   "codegenConfig": {
-  "name": "Simple",
-  "type": "modules",
-  "jsSrcsDir": "./windows/Simple",
-  "windows": {
-    "namespace": "NativeModules",
-    "cppStringType": "std::string",
-    "separateDataTypes": false,
-    "outputDirectory": "./NativeModules/codegen"
-  }
-},
+    "name": "Simple",
+    "type": "modules",
+    "jsSrcsDir": "./windows/Simple",
+    "windows": {
+      "namespace": "NativeModules",
+      "cppStringType": "std::string",
+      "separateDataTypes": false,
+      "outputDirectory": "./NativeModules/codegen"
+    }
+  },
   "modules": {
     "MouseClickModule": {
       "sourceDir": "./NativeModules",
@@ -87,7 +87,7 @@
     "NativeAsyncStorageModule": {
       "sourceDir": "./NativeModules",
       "namespace": "NativeAsyncStorageModule",
-      "methods": [ ]
+      "methods": []
     }
   }
 }

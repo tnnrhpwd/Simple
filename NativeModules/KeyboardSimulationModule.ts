@@ -1,11 +1,7 @@
-import { TurboModuleRegistry } from 'react-native';
-import type { TurboModule } from 'react-native';
+import { NativeModules } from 'react-native';
 
-export interface KeyboardSimulationModule extends TurboModule {
-  simulateEnterKeyPress: () => void;
-}
+const { KeyboardSimulationModule } = NativeModules;
 
-const KeyboardSimulationModule =
-  TurboModuleRegistry.get<KeyboardSimulationModule>('KeyboardSimulationModule');
-
-export default KeyboardSimulationModule;
+export default {
+  typeText: (text: string) => KeyboardSimulationModule.TypeText(text),
+};
