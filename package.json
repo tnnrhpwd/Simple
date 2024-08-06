@@ -9,6 +9,7 @@
     "start": "react-native start",
     "test": "jest",
     "windows": "react-native run-windows --logging",
+    "clean": "react-native clean",
     "codegen": "react-native codegen-windows --logging",
     "publish": "npx react-native bundle --platform windows --dev false --entry-file index.js --bundle-output ./.bundle/index.windows.bundle --assets-dest ./.bundle",
     "hierarchy": "powershell -ExecutionPolicy Bypass -File ./generate_structure.ps1"
