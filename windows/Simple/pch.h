@@ -14,7 +14,9 @@
 #include <UI.Xaml.Markup.h>
 #include <UI.Xaml.Navigation.h>
 
+#include <winrt/Windows.Foundation.h>
 #include <winrt/Microsoft.ReactNative.h>
+#include <winrt/base.h>
 
 #include <winrt/Microsoft.UI.Xaml.Automation.Peers.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.Primitives.h>

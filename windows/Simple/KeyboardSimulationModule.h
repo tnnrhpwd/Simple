@@ -1,16 +1,23 @@
-#pragma once
+// KeyboardSimulationModule.h
+#pragma once;
 #include "pch.h"
 #include "Generated Files/winrt/Microsoft.ReactNative.h"
+#include <winrt/Windows.UI.Core.h>
+#include <winrt/Microsoft.ReactNative.h>
+
+namespace winrt::Microsoft::ReactNative {
 
 namespace NativeModules {
 
 class KeyboardSimulationModule {
 public:
-    void Initialize(winrt::Microsoft.ReactNative::ReactContext const& reactContext);
-    void TypeText(winrt::hstring const& text);
+    void Initialize(IReactContext const& reactContext);
+    void TypeText(hstring const& text);
+    // IReactHost Host() const noexcept;
 
 private:
-    winrt::Microsoft.ReactNative::ReactContext m_reactContext{ nullptr };
+    IReactContext m_reactContext{ nullptr };
 };
 
-} // namespace NativeModules
+}
+}

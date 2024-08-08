@@ -96,13 +96,14 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
-    <ClInclude Include="ReactPackageProvider.h" />
-    <ClInclude Include="AutolinkedNativeModules.g.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
   </ItemGroup>
+  <!-- <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CppWinRT" Version="2.0.200316.3" />
+  </ItemGroup> -->
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <SubType>Designer</SubType>
@@ -129,8 +130,8 @@
     </ClCompile>
     <ClCompile Include="ReactPackageProvider.cpp" />
     <ClCompile Include="AutolinkedNativeModules.g.cpp" />
-    <!-- <ClCompile Include="MouseClickModule.cpp" />
-    <ClCompile Include="KeyboardSimulationModule.cpp" /> -->
+    <ClCompile Include="MouseClickModule.cpp" />
+    <ClCompile Include="KeyboardSimulationModule.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
