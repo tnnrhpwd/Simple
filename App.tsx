@@ -25,6 +25,7 @@ import HomePage from './components/HomePage';
 import About from './components/About';
 import Contact from './components/Contact';
 import InputPage from './components/InputPage';
+import LoginScreen from './components/LoginScreen';
 
 const styles = StyleSheet.create({
   container: {
@@ -125,6 +126,8 @@ function App(): React.JSX.Element {
         return <Contact />;
       case 'InputPage':
         return <InputPage />;
+      case 'LoginScreen':
+        return <LoginScreen />;
       default:
         return null;
     }
@@ -183,6 +186,9 @@ function App(): React.JSX.Element {
           </Text>
           <Text style={styles.navbarButton} onPress={() => navigateTo('About')}>
             About
+          </Text>
+          <Text style={styles.navbarButton} onPress={() => navigateTo('LoginScreen')}>
+            LoginScreen
           </Text>
           <Text
             style={styles.navbarButton}
