@@ -17,10 +17,10 @@ import { decodeJpeg, fetch } from '@tensorflow/tfjs-react-native';
 // import modelJson from './path_to_your_model/model.json';
 // import modelWeights from './path_to_your_model/group1-shard1of1.bin';
 
-// import MouseClickModule from '../NativeModules/MouseClickModule';
-const { MouseClickModule } = NativeModules;
-// import KeyboardSimulationModule from '../NativeModules/KeyboardSimulationModule';
-const { KeyboardSimulationModule } = NativeModules;
+// import MouseClickModule from '../NativeModules/MouseClickModule'; // pulls native modules with errors
+const { MouseClickModule } = NativeModules; // This does not pull from native modules for some reason
+// import KeyboardSimulationModule from '../NativeModules/KeyboardSimulationModule'; // pulls native modules with errors
+const { KeyboardSimulationModule } = NativeModules; // This does not pull from native modules for some reason
 
 if (MouseClickModule) {
   Alert.alert(

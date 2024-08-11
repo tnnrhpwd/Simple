@@ -12,4 +12,4 @@ void ReactPackageProvider::CreatePackage(IReactPackageBuilder const &packageBuil
     AddAttributedModules(packageBuilder, true);
 }
 
-} // namespace winrt::Simple::implementation
+}
