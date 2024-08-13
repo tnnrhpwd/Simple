@@ -21,6 +21,8 @@ import { decodeJpeg, fetch } from '@tensorflow/tfjs-react-native';
 const { MouseClickModule } = NativeModules; // This does not pull from native modules for some reason
 // import KeyboardSimulationModule from '../NativeModules/KeyboardSimulationModule'; // pulls native modules with errors
 const { KeyboardSimulationModule } = NativeModules; // This does not pull from native modules for some reason
+// import FileSystemModule from '../NativeModules/FileSystemModule'; // pulls native modules with errors
+const { FileSystemModule } = NativeModules; // This does not pull from native modules for some reason
 
 if (MouseClickModule) {
   Alert.alert(
@@ -131,7 +133,7 @@ const InputPage: React.FC = () => {
         typeof MouseClickModule.clickLeftMouseButton === 'function'
       ) {
         try {
-          MouseClickModule.clickLeftMouseButton();
+          MouseClickModule.SimulateMouseClick(500, 500);
           Alert.alert('Mouse Click', 'Mouse click simulated successfully.');
         } catch (error) {
           console.error('Error invoking MouseClickModule:', error);
@@ -160,11 +162,11 @@ const InputPage: React.FC = () => {
   const handleKeyboardSimulation = () => {
     if (Platform.OS === 'windows') {
       if (
-        KeyboardSimulationModule &&
-        typeof KeyboardSimulationModule.simulateEnterKeyPress === 'function'
+        KeyboardSimulationModule
+        //  && typeof KeyboardSimulationModule.simulateEnterKeyPress === 'function'
       ) {
         try {
-          KeyboardSimulationModule.simulateEnterKeyPress();
+          KeyboardSimulationModule.SimulateKeyPress('A'.charCodeAt(0));
           Alert.alert(
             'Keyboard Simulation',
             'Enter key simulated successfully.',
