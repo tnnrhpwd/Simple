@@ -13,16 +13,15 @@ import AuthService from '../services/AuthService';
 // import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
-  const [username, setUsername] = useState('');
+  const [email, setUsername] = useState('');
   const [password, setPassword] = useState('');
   // const navigation = useNavigation();
 
   const handleLogin = async () => {
     try {
-      const isAuthenticated = await AuthService.login(username, password);
+      const isAuthenticated = await AuthService.login(email, password);
       if (isAuthenticated) {
         await AsyncStorage.setItem('userToken', 'your_generated_token');
-        navigation.navigate('InputPage');
       } else {
         Alert.alert('Login Failed', 'Invalid username or password.');
       }
@@ -39,8 +38,8 @@ const LoginScreen = () => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#333333"
-          placeholder="Username"
-          value={username}
+          placeholder="Email"
+          value={email}
           onChangeText={setUsername}
         />
         <TextInput

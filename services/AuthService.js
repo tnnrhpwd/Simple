@@ -2,13 +2,13 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BASE_URL = 'http://your-backend-url.com/api';
+const API_URL = 'https://mern-plan-web-service.onrender.com/api/data/'; // sends base http request here
 
 const AuthService = {
-  login: async (username, password) => {
+  login: async (email, password) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-        username,
+      const response = await axios.post(`${API_URL}login`, {
+        email,
         password,
       });
 
